@@ -1,9 +1,9 @@
-{% entends base.html %}
+{% extends 'base.html' %}
 
 {% block content %}
     <div class="home-container">
         <h1>Anime Verse</h1>
-            {% if current_user.is-authenticated %}
+            {% if current_user.is_authenticated %}
                 <p class="welcome-message" >Welcome { current_user.name }!</p>
                 <p>This is our Anime Verse Website.</p>
                 <div class="quick-links">

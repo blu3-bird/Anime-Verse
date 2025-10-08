@@ -9,7 +9,7 @@ from app.models import User
 from datetime import datetime
 
 
-@auth.route('/register', Methods=['GET', 'POST'])
+@auth.route('/register', methods=['GET', 'POST'])
 def register():
     """Register a new User"""
     if current_user.is_authenticated():
@@ -31,7 +31,7 @@ def register():
     
     return render_template('auth/register.html', title = 'Register' , form = form)
 
-@auth.route('/login' , Methods=["GET", "POST"])
+@auth.route('/login' , methods=["GET", "POST"])
 def login():
     """For Registrated Users"""
     if current_user.is_authenticated():
