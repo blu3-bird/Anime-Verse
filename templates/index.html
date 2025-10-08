@@ -1,0 +1,23 @@
+{% entends base.html %}
+
+{% block content %}
+    <div class="main-container">
+        <h1>Anime Verse</h1>
+            {% if current_user.is-authenticated %}
+                <p>Welcome { current_user.name }!</p>
+                <p>This is our Anime Verse Website.</p>
+                <div class="index-btns">
+                    <a href="{{ url_for('auth.profile') }}">Profile</a>
+                </div>
+
+            {% else %}
+             <p>Welcome to our Anime Verse Website.</p>
+             <p>Website to rate your watched anime</p>
+             <p>Kindly register/login</p>
+             <div class="index-btns">
+                <a href="{{ url-for('auth.login') }}">Get started</a>
+                <a href="{{ url_for('auth.register') }}">Register</a>
+             </div>
+    {% endif %}
+</div>
+{% endblock %}
