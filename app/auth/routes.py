@@ -60,17 +60,3 @@ def login():
             
         return redirect(next_page)
     return render_template('auth/login.html', title = login , form = form )
-
-@auth.route('/logout')
-@login_required
-def logout():
-    """Logout User"""
-    logout_user()
-    flash('User has been successfully logout!', 'info')
-    return redirect(url_for('main.index'))
-
-@auth.route('/profile')
-@login_required
-def profile():
-    """User Profile Tab"""
-    return render_template('auth/profile.html', title = 'Profile' , user = current_user)
