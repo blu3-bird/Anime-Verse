@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Auth ~ Login{% endblock %}
+
+{% block extra_css %} <link href="{ url_for('static'), filename='login.css' }" rel="stylesheet"> {% endblock %}
+
+{% block content %} 
+
+<div class="login-container">
+    <p class="heading">Having an Account?</p>
+    <div class="login-form-container">
+        <div class="input-field">
+            <input type="text" class="username-field" placeholder="<Username>">
+        </div>
+        <div class="input-field">
+            <input type="password" class="password-field" placeholder="<Password>">
+        </div>
+        <div class="btn-field">
+            <button class="btn" type="submit">Login</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
