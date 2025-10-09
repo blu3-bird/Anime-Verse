@@ -12,7 +12,7 @@ from datetime import datetime
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
     """Register a new User"""
-    if current_user.is_authenticated():
+    if current_user.is_authenticated:
         return redirect(url_for(main.index))
     
     form = RegistrationForm()
@@ -34,7 +34,7 @@ def register():
 @auth.route('/login' , methods=["GET", "POST"])
 def login():
     """For Registrated Users"""
-    if current_user.is_authenticated():
+    if current_user.is_authenticated:
         return redirect(url_for('main.index'))
     
     form = LoginForm()
@@ -59,7 +59,7 @@ def login():
             next_page = url_for('main.index')
             
         return redirect(next_page)
-    return render_template('auth/login.html', title = login , form = form )
+    return render_template('auth/login.html', title ='login' , form=form )
 
 @auth.route('/logout')
 @login_required
