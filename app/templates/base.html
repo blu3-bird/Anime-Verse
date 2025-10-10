@@ -80,10 +80,20 @@
                         <h3>Ouick Links</h3>
                         <ul class="footer-links">
                             <li><a href="{{ url_for('main.index') }}">Home</a></li>
-                            <li><a href="#">How it works</a></li>
-                            <li><a href="#">API Info</a></li>
+                            <li><a href="#">Search Anime</a></li>
+                            <li><a href="#">Treading</a></li>
                         </ul>
                     </div>
+
+                    <div class="footer-section">
+                        <h3>About</h3>
+                        <ul class="footer-links">
+                            <li><a href="#" onclick="opneModal()">About Creator</a></li>
+                            <li><a href="#">How it works</a></li>
+                            <li><a href="#">API info</a></li>
+                        </ul>
+                    </div>
+
                     <!--Connect-->
                     <div class="footer-section">
                         <h3>Connect</h3>
@@ -99,6 +109,8 @@
                             <a href="#" target="_blank" class="social=link">
                                 <span>Twitter</span>
                             </a>
+
+                            <a href="mailto:youaregifted@myyahoo.com" class="social-links">Email</a>
                         </div>
                     </div>
 
@@ -111,5 +123,45 @@
                 </div>
             </div>
         </footer>
+
+        <!--About Creator Modal-->
+        <div id="aboutModal" class="modal">
+            <div class="modal-content">
+                <span class="modal-class" onclick="closeModal()">&times;</span>
+
+                <h2>About the Creator</h2>
+
+                <div class="modal-body">
+                    <div class="creator-info">
+                        <div class="creator-avatar">
+<!--Add profile photo here.-->
+                            <span class="avatar-placeholder">Arson</span>
+                        </div>
+                        <div class="creator-details">
+                            <h3>Pardeep Singh</h3>
+                            <p class="creator-title">Anime Verse</p>
+
+                            <p class="creator-bio">
+                                Hi, I m a develpor passionate about creating useful web application. This anime tracker is built with Flask, PostgreSQL and the Jikan API as a learning project to improve my full-stack development skills.
+                            </p>
+
+                            <div class="tech-stack">
+                                <h4>Tech Stack:</h4>
+                                <div class="tech-bedges">
+                                    <span class="tech-badge">Python</span>
+                                    <span class="tech-badge">Flask</span>
+                                    <span class="tech-badge">PostgreSQL</span>
+                                    <span class="tech-badge">HTML/CSS</span>
+                                    <span class="tech-badge">JavaScript</span>
+                                    <span class="tech-badge">Jikan API</span>
+                                </div>
+                            </div>
+
+                            <div class="creator-links"
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
