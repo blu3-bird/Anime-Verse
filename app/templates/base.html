@@ -1,51 +1,115 @@
- <!DOCTYPE html>
- <html lang="en">
+<!DOCTYPE html>
+<html lang="en">
     <head>
-        <meta charset="UTF_8">
+        <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}Anime Verse {% endblock %}</title>
-        <link rel="stylesheet" href="{{ url_for('static' , filename='css/base.css') }}">
+        <title>{% block title %}Anime Verse ~ Track & Discover Anime{% endblock %}</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     </head>
+
     <body>
-        <div class="nav-container">
-        <nav>
-            <a href="{{ url_for('main.index') }}" class="logo"><img src="" alt="logo"></a>
-            <ul>
-                <li>
-                    <a href="{{ url_for('main.index') }}">Home</a>
-                </li>
-                {% if current_user.is_authenticated %}
-                <li>
-                    <a href="{{ url_for('auth.profile') }}">Profile</a>
-                </li>
-                <li>
-                    <a href="{{ url_for('auth.logout') }}">Logout</a>
-                </li>
-                {% else %}
-                <li>
-                    <a href="{{ url_for('auth.login') }}">Login</a>
-                </li>
-                <li>
-                    <a href="{{ url_for('auth.register') }}">Register</a>
-                </li>
-                {% endif %}
-            </ul>
+        <!--Nav bar-->
+        <nav class="nav-bar">
+            <div class="nav-container">
+                <a href="{{ url_for('main.index') }}" class="nav-logo">Anime Verse
+
+                </a>
+                <!--Menu Items-->
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="{{ url_for('main.index') }}" class="nav-link">
+                            Home
+                        </a>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('auth.profile') }}" class="nav-link">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Search</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('main.watchlist') }}" class="nav-link">
+                            Watchlist
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('auth.logout') }}" class="nav-link">Logout</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a href="{{ url_for('auth.login') }}" class="nav-link">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url_for('auth.register') }}" class="nav-link">Register</a>
+                    </li>
+                    {% endif %}
+                </ul>
+                
+            </div>
         </nav>
-    </div>
+        <div class="main-container">
 
-    <div class="container">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">
-                        {{ message }}
+            <!--flash messages-->
+            {% with messages = flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                <span>{{ message }}</span>
+                                <button class="alert-close" onclick="this.parentElement.remove()">&times;</button>
+                            </div>
+                        {% endfor %}
                     </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-    </div>
+                {% endif %}
+            {% endwith %}
 
-    {% block content %}
-    {% endblock %}
+            <!--Page content-->
+            {% block content %} {% endblock %}
+        </div>
+
+        <!--Footer-->
+        <footer class="footer">
+            <div class="footer-container">
+
+                <!--Footer Top Section-->
+                <div class="footer-top">
+
+                    <!--Quick Links-->
+                    <div class="footer-section">
+                        <h3>Ouick Links</h3>
+                        <ul class="footer-links">
+                            <li><a href="{{ url_for('main.index') }}">Home</a></li>
+                            <li><a href="#">How it works</a></li>
+                            <li><a href="#">API Info</a></li>
+                        </ul>
+                    </div>
+                    <!--Connect-->
+                    <div class="footer-section">
+                        <h3>Connect</h3>
+                        <div class="social-links">
+                            <a href="https://github.com/blu3-bird" target="_blank" class="social-link">
+                                <span>Github</span>
+                            </a>
+
+                            <a href="#" target="_blank" class="social-link">
+                                <span>Linkedin</span>
+                            </a>
+<!--Add links-->
+                            <a href="#" target="_blank" class="social=link">
+                                <span>Twitter</span>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!--Footer bottom section-->
+                <div class="footer-bottom">
+                    <p>&copy; 2024 Anime Verse. Built with Flask and Jikan API.</p>
+                    <p class="footer-tech">Python • Flask • PostgreSQL • Jikan API</p>
+                </div>
+            </div>
+        </footer>
     </body>
- </html>
+</html>
