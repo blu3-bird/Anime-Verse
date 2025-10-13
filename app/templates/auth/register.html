@@ -58,11 +58,11 @@
 
             <!--Confirm Password field-->
             <div class="form-group">
-                {{ form.password2.label(class="form-label") }}
-                {{ form.password2(class="form-input", placeholder="Re-enter your password") }}
-                {% if form.password2.errors %}
+                {{ form.confirmPassword.label(class="form-label") }}
+                {{ form.confirmPassword(class="form-input", placeholder="Re-enter your password") }}
+                {% if form.confirmPassword.errors %}
                     <ul class="form-errors">
-                        {% for error in form.password2.errors %}
+                        {% for error in form.confirmPassword.errors %}
                             <li>{{ error }}</li>
                         {% endfor %}
                     </ul>
