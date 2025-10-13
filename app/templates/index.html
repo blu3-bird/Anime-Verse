@@ -1,25 +1,100 @@
 {% extends 'base.html' %}
 
-{% block title %}Homepage{% endblock %}
+{% block title %}Home ~ Anime Verse{% endblock %}
 
 {% block content %}
-    <div class="home-container">
-        <h1>Anime Verse</h1>
-            {% if current_user.is_authenticated %}
-                <p class="welcome-message" >Welcome { current_user.name }!</p>
-                <p>This is our Anime Verse Website.</p>
-                <div class="quick-links">
-                    <a href="{{ url_for('auth.profile') }}" class="btn">Profile</a>
-                </div>
+<div class="home-page">
+        <!--Hero section-->
+    <div class="hero-section">
+        {% if current_user.is_authenticated %}
+            <h1>Welcome back, {{ current_user.name }}! </h1>
+            <p class="hero-subtitle">Ready to discover your next favourite anime?</p>
+        {% else %}
+            <h1>Welcome to Anime Verse</h1>
+            <p class="hero-subtitle">Track, Rate and Discover Amazing world of Anime</p>
+        {% endif %}
+    </div>
 
-            {% else %}
-             <p>Welcome to our Anime Verse Website.</p>
-             <p>Website to rate your watched anime</p>
-             <p>Kindly register/login</p>
-             <div class="quick-links">
-                <a href="{{ url-for('auth.login') }}" class="btn btn-primary" >Get started</a>
-                <a href="{{ url_for('auth.register') }}" class="btn" >Register</a>
-             </div>
+    <!--Search Bar (for logged in users)-->
+
+    {% if current_user.is_authenticated %}
+        <div class="search-section">
+            <form action="{{ url_for('main.search') }}" method="GET" class="search-form">
+                <input type="text" name="q" placeholder="Search for Anime..."
+                class="search-input" required autocomplete="off">
+                <button type="submit" class="search-btn">Search</button>
+            </form>
+        </div>
+    {% endif %}
+
+    <!--for Not logged in users-->
+
+    {% if current_user.is_authenticated %}
+    <div class="cta-section">
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-large">Get Started</a>
+
+        <a href="{{ url_for('auth.login') }}" class="btn btn-secondary btn-large">Sign In</a>
+    </div>
+    {% endif %}
+
+    <!--Featured anime section-->
+    <div class="featured-section">
+        <h2>Popular Anime</h2>
+        <p class="section-subtitle">Treading anime everyone's watching</p>
+
+        <div class="anime-grid">
+            <!--Placeholder cards we'll populate with real data later-->
+            <div class="anime-card">
+                <div class="anime-card-placeholder">
+                    <p>Loading Anime...</p>
+                    <small>Coming soon via Jikan API</small>
+                </div>
+            </div>
+            <div class="anime-card">
+                <div class="anime-card-placeholder">
+                    <p>Loading anime...</p>
+                    <small>Coming Soon via Jikan API</small>
+                </div>
+            </div>
+            <div class="anime-card">
+                <div class="anime-card-placeholder">
+                    <p>Loading Anime</p>
+                    <small>Coming soon via Jikan API</small>
+                </div>
+            </div>
+            <div class="anime-card">
+                <div class="anime-card-placeholder">
+                    <p>Loading anime</p>
+                    <small>Coming Soon via Jikan API</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Features Section -->
+    {% if current_user.is_authenticated %}
+    <div class="features-section">
+        <h2 class="text-center mb-3" >Why Choose Anime Verse</h2>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎗️</div>
+                <h3>Track your Anime</h3>
+                <p>Keep a personlized wathclist of anime you are watching, completed or going to watch...</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🎗️</div>
+                <h3>Get Recommendations</h3>
+                <p>Discover new anime based on your watch history and rating. Find your next anime watch..</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">👾</div>
+                <h3>Powered By Jikan</h3>
+                <p>Access comprehensive anime data from MyAnimeList through the Jikan API</p>
+            </div>
+        </div>
+    </div>
     {% endif %}
 </div>
 {% endblock %}
