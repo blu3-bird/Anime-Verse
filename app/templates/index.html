@@ -29,7 +29,7 @@
 
     <!--for Not logged in users-->
 
-    {% if current_user.is_authenticated %}
+    {% if not current_user.is_authenticated %}
     <div class="cta-section">
         <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-large">Get Started</a>
 
