@@ -52,7 +52,7 @@
         <div class="main-container">
 
             <!--flash messages-->
-            {% with messages = flashed_messages(with_categories=true) %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     <div class="flash-messages">
                         {% for category, message in messages %}
@@ -89,7 +89,7 @@
                     <div class="footer-section">
                         <h3>About</h3>
                         <ul class="footer-links">
-                            <li><a href="#" onclick="opneModal()">About Creator</a></li>
+                            <li><a href="#" onclick="openModal('aboutModal')">About Creator</a></li>
                             <li><a href="#">How it works</a></li>
                             <li><a href="#">API info</a></li>
                         </ul>
