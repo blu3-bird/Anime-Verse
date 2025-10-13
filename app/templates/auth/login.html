@@ -43,6 +43,11 @@
                 {% endif %}
             </div>
 
+            <div class="form-group">
+                {{  form.remember_me.label(class='checkbox-label') }}
+                {{ form.remember_me( placeholder="Remember Me") }}
+            </div>
+
             <!--Submit Btn-->
             <div class="form-group">
                 {{ form.submit(class="btn btn-primary btn-block") }}

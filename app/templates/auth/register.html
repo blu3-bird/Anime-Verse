@@ -41,6 +41,17 @@
             </div>
 
             <!--Name field-->
+            <div class="from-group">
+                {{ form.name.label(class="form-label") }}
+                {{ form.name(class='form-input', placeholder="Enter your name") }}
+                {% if form.name.errors %}
+                        <ul class="form-errors">
+                            {% for error in form.name.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                {% endif %}
+            </div>
             
 
             <!--Password Field-->

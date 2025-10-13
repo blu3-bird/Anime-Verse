@@ -19,7 +19,7 @@
 
     {% if current_user.is_authenticated %}
         <div class="search-section">
-            <form action="{{ url_for('main.search') }}" method="GET" class="search-form">
+            <form action="{{ url_for('main.index') }}" method="GET" class="search-form">
                 <input type="text" name="q" placeholder="Search for Anime..."
                 class="search-input" required autocomplete="off">
                 <button type="submit" class="search-btn">Search</button>
