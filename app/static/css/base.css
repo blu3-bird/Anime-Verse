@@ -560,8 +560,9 @@ modal-body {
 }
 
 .search-section {
-    max-width: 800px;
-    margin: 3rem auto;
+    max-width: 500px;
+    margin: 2rem auto;
+    justify-content: center;
 }
 
 .search-from {
@@ -581,7 +582,7 @@ modal-body {
 }
 
 .search-input {
-    flex:1;
+    flex: 1;
     background: transparent;
     padding: 1rem 1.5rem;
     font-size: 1.1rem;
@@ -601,7 +602,7 @@ modal-body {
     border-radius: 50px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 1s ease;
 }
 
 .search-btn:hover {
