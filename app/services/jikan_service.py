@@ -28,3 +28,26 @@ class JikanService:
             print(f"Jikan API Error: {e}")
             return None
         
+    
+    @staticmethod
+    def search_anime(query: str, limit: int = 20) -> List[Dict]:
+        """
+        Search for anime by title
+        
+        Args: 
+            query (str) : Search query (anime title)
+            limit (int) : Maximum number of results (default:20)
+
+        Returns:
+            List[Dict]: List of naime results
+        """
+
+        if not query or not query.strip():
+            return []
+        endpoint = f'/anime?q={query}&limit={limit}'
+        response = JikanService._make_request(endpoint)
+        if response and 'data' in response:
+            return response['data']
+        
+        return[]
+    
