@@ -21,7 +21,10 @@
         <div class="search-section">
             <form action="{{ url_for('main.index') }}" method="GET" class="search-form">
                 <input type="text" name="q" placeholder="Search for Anime..."
-                class="search-input" required autocomplete="off">
+                class="search-input" 
+                value="{{ search_query }}"
+                required autocomplete="off">
+
                 <button type="submit" class="search-btn">Search</button>
             </form>
         </div>
@@ -37,7 +40,53 @@
     </div>
     {% endif %}
 
-    <!--Featured anime section-->
+    <!--Search Results Section-->
+    {% if search_query %}
+    <div class="featured-section">
+        <h2>
+            Search Results for "{{ search_query }}"
+        </h2>
+        <p class="section-subtitle">
+            Found {{ search_results|length }} results
+        </p>
+
+        {% if search_results %}
+        <div class="anime-grid">
+            {% for anime in search_results %}
+            <div class="anime-card">
+                <div class="anime-card-image">
+                    <img src="{{ anime.images.jpg.large_image_url }}" alt="{{ anime.title }}" loading="lazy">
+                </div>
+
+                <div class="anime-card-content">
+                    <h3 class="anime-title">{{ anime.title }}</h3>
+
+                    <div class="anime-info">
+                        <span class="anime-type">{{ anime.type }}</span>
+                        {% if anime.episodes %}
+                        <span class="anime-episodes">{{ anime.episodes }} eps</span>
+                        {% endif %}
+                    </div>
+
+                    {% if anime.score %}
+                    <div class="anime-rating">
+                        <span class="rating-star">🌟</span>
+                        <span class="rating-score">{{ anime.score }}</span>
+                    </div>
+                    {% endif %}
+
+                    <div class="anime-actions">
+                        <a href="#" class="btn btn-primary btn-small">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% else %}
+
+    <!--Featured anime section(when no search)-->
     <div class="featured-section">
         <h2>Popular Anime</h2>
         <p class="section-subtitle">Treading anime everyone's watching</p>
@@ -70,8 +119,11 @@
             </div>
         </div>
     </div>
+    {% endif %}
+
+
     <!--Features Section -->
-    {% if current_user.is_authenticated %}
+    {% if not current_user.is_authenticated %}
     <div class="features-section">
         <h2 class="text-center mb-3" >Why Choose Anime Verse</h2>
 
