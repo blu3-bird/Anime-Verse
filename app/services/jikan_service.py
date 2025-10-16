@@ -30,24 +30,57 @@ class JikanService:
         
     
     @staticmethod
-    def search_anime(query: str, limit: int = 20) -> List[Dict]:
+    def search_anime(query: str, page: int= 1, limit: int = 20) -> Dict:
         """
-        Search for anime by title
+        Search for anime by title with pagination
         
         Args: 
             query (str) : Search query (anime title)
-            limit (int) : Maximum number of results (default:20)
+            page (int) : Page number (default: 1)
+            limit (int) : Results per page (default:20)
 
         Returns:
-            List[Dict]: List of naime results
+            Dict: Contains 'results' (list) and 'has_next_page' (bool)
         """
 
         if not query or not query.strip():
-            return []
-        endpoint = f'/anime?q={query}&limit={limit}'
+            return {'results': [], 'has_next_page': False}
+        
+        endpoint = f'/anime?q={query}&page={page}&limit={limit}'
         response = JikanService._make_request(endpoint)
+
+        if response and 'data' in response:
+            # Check if there is a next page
+            has_next_page = False
+            if 'pagination' in response: 
+                # Get 'has_next_page' value, default to false if not found.
+                has_next_page = response['pagination'].get('has_next_page', False)
+
+
+            return {
+                'results': response['data'],
+                'has_next_page': has_next_page,
+                'current_page': page
+            }
+        
+        return {'results': [], 'has_next_page': False}
+    
+    @staticmethod
+    def get_anime_details(anime_id: int) -> Optional[Dict]:
+        """
+        Get detailed information about a specific anime
+
+        Args:
+            anime_id(int): MyAnimeList anime id
+
+        Returns:
+            Optional[Dict]: Anime Details or none if not found
+        """
+
+        endpoint = f'/anime/{anime_id}'
+        response = JikanService._make_request(endpoint)
+
         if response and 'data' in response:
             return response['data']
         
-        return[]
-    
+        return None
