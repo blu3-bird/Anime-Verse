@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ anime.title }} ~ Anime Verse{% endblock %}
+
+{% block content %}
+<div class="anime-details-page">
+
+    <!--back btn-->
+    <div class="container">
+        <a href="{{ url_for('main.index') }}" class="btn btn-secondary mb-2">
+            ← Back to Search
+        </a>
+    </div>
+
+    <!--Anime Header-->
+    <div class="anime-header">
+        <div class="container">
+            <div class="anime-header-content">
+
+
+                <!--Anime Poster-->
+                <div class="anime-poster">
+                    <img src="{{ anime.images.jpg.large_image_url }}" alt="{{ anime.title }}">
+                </div>
+
+                <!--Anime Info-->
+                <div class="anime-info-main">
+                    <h1>{{ anime.title }}</h1>
+
+                    {% if anime.title_english and anime_title_english != anime.title %}
+                    <h2 class="anime-title-alt">{{ anime.title.english }}</h2>
+                    {% endif %}
+
+                    {% if anime.title_japanese %}
+                    <p class="anime-title-jp">{{ anime.title_japanese }}</p>
+                    {% endif %}
+
+                    <!--Rating-->
+                    {% if anime.score %}
+                    <div class="anime-score">
+                            <span class="score-number">{{ anime.score }}</span>
+                            <span class="score-label">/ 10</span>
+                            <span class="score-votes">({{ anime.scored_by|default(0) }} votes)</span>
+                    </div>
+                    {% endif %}
+
+                    <!--Quick Info-->
+                    <div class="anime-meta">
+                        {% if anime.type %}
+                        <span class="meta-item">
+                            <strong>Type:</strong> {{ anime.type }}
+                        </span>
+                        {% endif %}
+
+                        {% if anime.episodes %}
+                        <span class="meta-item">
+                            <strong>Episodes:</strong> {{ anime.episodes }}
+                        </span>
+                        {% endif %}
+
+                        {% if anime.status %}
+                        <span class="meta-item">
+                            <strong>Status:</strong> {{ anime.status }}
+                        </span>
+                        {% endif %}
+
+                        {% if anime.aired and anime.aired.string %}
+                        <span class="meta-item">
+                            <strong>Aired:</strong> {{ anime.aired.string }}
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    <!--Anime Genres-->
+                    {% if anime.genres %}
+                    <div class="anime-genres">
+                        {% for genre in anime.genres %}
+                        <span class="genre-tag">{{ genre.name }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <!--Action Btns-->
+                    {% if current_user.is_authenticated %} <!--In case if i add search bar for un logged in users-->
+                    <div class="anime-actions">
+
+                        <button class="btn btn-primary">
+                            😈 Add to Watchlist
+                        </button>
+
+                        <button class="btn btn-secondary">
+                            🌻 Rate
+                        </button>
+                    </div>
+                    {% else %}
+                    <div class="anime-actions">
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Login to Add to Watchlish</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Synopsis-->
+    <div class="container">
+        <div class="anime-section">
+            <h3>Synopsis</h3>
+            {% if anime.synopsis %}
+            <p class="anime-synopsis">
+                {{ anime.synopsis }}
+            </p>
+            {% endif %}
+        </div>
+
+        <!--Additional Info-->
+        <div class="anime-section">
+            <h3>Additional Infomation</h3>
+            <div class="info-grid">
+                {% if anime.studios %}
+                <div class="info-item">
+                    <strong>Studios:</strong>
+                    {% for studio in anime.studios %}
+                        {{ studio.name }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if anime.producers %}
+                <div class="info-item">
+                    <strong>Producers:</strong>
+                    {% for producer in producers %}
+                        {{ producer.name }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% if anime.source %}
+                <div class="info-item">
+                    <strong>Source:</strong> {{ anime.source }}
+                </div>
+                {% endif %}
+
+                {% if anime.duration %}
+                <div class="info-item">
+                    <strong>Duration:</strong> {{ anime.duration }}
+                </div>
+                {% endif %}
+
+                {% if anime.rating %}
+                <div class="info-item">
+                    <strong>Rating:</strong>  {{ anime.rating }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!--Trailer-->
+        {% if anime.trailer and anime.trailer.youtube_id %}
+        <div class="anime-section">
+            <h3>Trailer</h3>
+            <div class="anime-trailer">
+                <iframe 
+                    width="100%" height="500"
+                    src="https://www.youtube.com/embed/{{ anime.trailer.youtube_id }}"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
