@@ -7,9 +7,15 @@
 
     <!--back btn-->
     <div class="container">
-        <a href="{{ url_for('main.index') }}" class="btn btn-secondary mb-2">
-            ← Back to Search
-        </a>
+        {% if from_search %}
+            <a href="{{ url_for('main.index', q=from_search, page=search_page) }}" class="btn btn-secondary mb-2">
+            ← Back to Search Results
+            </a>
+        {% else %}
+            <a href="{{ url_for('main.index') }}" class="btn btn-secondary mb-2">
+               ← Back to Home 
+            </a>
+        {% endif %}
     </div>
 
     <!--Anime Header-->
