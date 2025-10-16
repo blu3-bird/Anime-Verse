@@ -76,11 +76,34 @@
                     {% endif %}
 
                     <div class="anime-actions">
-                        <a href="#" class="btn btn-primary btn-small">View Details</a>
+                        <a href="{{ url_for('main.anime_details', 
+                        anime_id=anime.mal_id,
+                        from_search=search_query,
+                        page=current_page) }}" class="btn btn-primary btn-small">View Details</a>
                     </div>
                 </div>
             </div>
             {% endfor %}
+        </div>
+
+        <!--Pagination Controls-->
+        <div class="pagination-controls">
+            <!--Previous Page button-->
+            {% if current_page > 1 %}
+            <a href="{{ url_for('main.index', q=search_query, page=current_page - 1) }}" class="btn btn-secondary">
+                ← Previous Page
+            </a>
+            {% endif %}
+
+            <!--Page info-->
+            <span class="page-info">Page {{ current_page }}</span>
+
+            <!--Next Page button-->
+            {% if has_next_page %}
+            <a href="{{ url_for('main.index', q=search_query, page=current_page + 1) }}" class="btn btn-primary">
+                 Next Page →
+            </a>
+            {% endif %}
         </div>
         {% endif %}
     </div>
