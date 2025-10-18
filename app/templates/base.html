@@ -11,8 +11,8 @@
         <!--Nav bar-->
         <nav class="nav-bar">
             <div class="nav-container">
-                <a href="{{ url_for('main.index') }}" class="nav-logo">Anime Verse
-
+                <a href="{{ url_for('main.index') }}" class="nav-logo">
+                    <img src="{{ url_for('static', filename='Images/website_logo.jpeg') }}" class="website-logo">
                 </a>
                 <!--Menu Items-->
                 <ul class="nav-menu">
@@ -107,7 +107,7 @@
                                 <span>Linkedin</span>
                             </a>
 <!--Add links-->
-                            <a href="#" target="_blank" class="social=link">
+                            <a href="#" target="_blank" class="social-link">
                                 <span>Twitter</span>
                             </a>
 
@@ -128,7 +128,7 @@
         <!--About Creator Modal-->
         <div id="aboutModal" class="modal">
             <div class="modal-content">
-                <span class="modal-class" onclick="closeModal()">&times;</span>
+                <span class="modal-close" onclick="closeModal()">&times;</span>
 
                 <h2>About the Creator</h2>
 
@@ -136,7 +136,9 @@
                     <div class="creator-info">
                         <div class="creator-avatar">
 <!--Add profile photo here.-->
-                            <span class="avatar-placeholder">Arson</span>
+                            <span class="avatar-placeholder">
+                                <img src="{{ url_for('static', filename='images/arson.png') }}" class="arson">
+                            </span>
                         </div>
                         <div class="creator-details">
                             <h3>Pardeep Singh</h3>
@@ -148,7 +150,7 @@
 
                             <div class="tech-stack">
                                 <h4>Tech Stack:</h4>
-                                <div class="tech-bedges">
+                                <div class="tech-badges">
                                     <span class="tech-badge">Python</span>
                                     <span class="tech-badge">Flask</span>
                                     <span class="tech-badge">PostgreSQL</span>
