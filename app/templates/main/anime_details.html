@@ -90,13 +90,42 @@
                     {% if current_user.is_authenticated %} <!--In case if i add search bar for un logged in users-->
                     <div class="anime-actions">
 
-                        <button class="btn btn-primary">
-                            😈 Add to Watchlist
-                        </button>
+                        {% if in_watchlist %}
+                        <!--Already in watchlist-->
+                        <div class="in-watchlist-badge">
+                            <span class="badge-icon">✓</span>
+                            <span>In your watchlist</span>
+                            <span class="badge-status">({{  in_watchlist.status.replace('_', '').title() }})</span>
+                        </div>
+                        <a href="{{ url_for('main.watchlist') }}" class="btn btn-secondary">
+                            View Watchlist →
+                        </a>
 
-                        <button class="btn btn-secondary">
-                            🌻 Rate
-                        </button>
+                    {% else %}
+                        <!--Add to Watchlist form-->
+                        <form method="POST" action="{{ url_for('main.add_to_watchlist') }}" class="watchlist-form">
+                            {{ form.hidden_tag() }}
+                            {{ form.anime_id }}
+                            {{ form.anime_title }}
+                            {{ form.anime_image }}
+                            {{ form.total_episodes }}
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    {{ form.status.label }}
+                                    {{ form.status(class='form-select') }}
+                                </div>
+
+                                <div class="form-group">
+                                    {{ form.episodes_watched.label }}
+                                    {{ form.episodes_watched(class="form-input-small") }}
+                                </div>
+                            </div>
+
+                            {{ form.submit(class="btn btn-primary") }}
+                        </form>
+                        {% endif %}
+                        
                     </div>
                     {% else %}
                     <div class="anime-actions">
