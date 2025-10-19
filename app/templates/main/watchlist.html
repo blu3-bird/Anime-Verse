@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+
+{% block title %}My Watchlist ~ Anime Verse {% endblock %}
+
+{% block content %}
+<div class="watchlist-page">
+
+    <!--Page Header-->
+    <div class="container">
+        <div class="page-header">
+            <h1>My Watchlist</h1>
+            <p class="page-subtitle">Track your anime journey</p>
+        </div>
+
+        <!--Stats dashboard-->
+        <div class="stats-dashboard">
+            <div class="stat-card">
+                <div class="stat-icon">✓</div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ total_anime }}</div>
+                    <div class="stat-label">Anime</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">🎗️</div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ total_episodes }}</div>
+                    <div class="stat-label">Episodes</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">🌟</div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ "%.1f"|format(avg_rating) }}/10</div>
+                    <div class="stat-label">Avg Rating</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Tab Navigation-->
+    <div class="container">
+        <div class="watchlist-tabs">
+            <a href="{{ url_for('main.watchlist', status='watching') }}" class="tab-link {% if active_status == 'watching' %}active{% endif %}">
+                <span class="tab-name">Watching</span>
+                <span class="tab-count">
+                    {{ status_counts['watching'] }}
+                </span>
+            </a>
+
+            <a href="{{ url_for('main.watchlist', status='completed') }}" class="tab-link {% if active_status == 'completed' %}active{% endif %}">
+                <span class="tab-name">Completed</span>
+                <span class="tab-count">{{ status_counts['completed'] }}</span>
+            </a>
+
+            <a href="{{ url_for('main.watchlist', status='plan_to_watch') }}" class="tab-link {% if active_status == 'plan_to_watch' %}active {% endif %}">
+                <span class="tab-name">Plan To Watch</span>
+                <span class="tab-count">{{ status_counts['plan_to_watch'] }}</span>
+            </a>
+
+            <a href="{{ url_for('main.watchlist', status='on_hold') }}" class="tab-link {% if active_status == 'on_hold' %}active{% endif %}">
+                <span class="tab-name">On Hold</span>
+                <span class="tab-count">{{ status_counts['on_hold'] }}</span>
+            </a>
+
+            <a href="{{ url_for('main.watchlist', status='dropped') }}" class="tab-link {% if active_status == 'dropped' %}active{% endif %}">
+                <span class="tab-name">Dropped</span>
+                <span class="tab-count">{{ status_counts['dropped'] }}</span>
+            </a>
+        </div>
+    </div>
+    
+    <!--Anime Grid-->
+    <div class="container">
+        {% if active_items %}
+        <div class="watchlist-grid">
+            {% for item in active_items %}
+            <div class="watchlist-card">
+                <!--Anime Image-->
+                <div class="watchlist-card-image">
+                    <a href="{{ url_for('main.anime_details', anime_id=item.anime_id) }}">
+                        <img src="{{ item.anime_image }}" alt="
+                        {{ item.anime_title }}" loading="lazy">
+                    </a>
+                </div>
+
+                <!--Anime Content-->
+                <div class="watchlist-card-content">
+                    <h3 class="watchlist-card-title">
+                        <a href="{{ url_for('main.anime_details', anime_id=item.anime_id) }}">
+                            {{ item.anime_title }}
+                        </a>
+                    </h3>
+
+                    <!--Progess-->
+                    {% if item.total_episodes %}
+                    <div class="progress-section">
+                        <div class="progress-text">
+                            {{ item.episodes_watched }} / {{ item.total_episodes }} episodes
+                        </div>
+                        
+                        <!--Circular progress-->
+                        <div class="circular-progress">
+                            <svg class="progress-ring" width="120" height="120">
+                                <!--Define gradient-->
+
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color: var(--accent-primary); stop-opacity: 1" />
+                                        <stop offset="100%" style="stop-color: var(--accent-glow); stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+
+                                <!--Background Circle-->
+                                <circle class="progress-ring-bg" cx="60" cy="60" r="52" stroke-width="8" fill="none" />
+
+                                <!--Progress circle-->
+                                <circle class="progress-ring-circle" cx="60" cy="60" r="52" stroke-width="8" fill="none" stroke-dasharray="{{ 2 * 3.14159 *52 }}" stroke-dashoffset="{{ 2 * 3.14159 *52 * (1 - item.episodes_watched / item.total_episodes) }}" transform="rotate(-90 60 60)" />
+                            </svg>
+
+                            <!--Percentage in center-->
+                            <div class="progress-percentage">
+                                <div class="percent-value">
+                                {{ (item.episodes_watched / item.total_episodes * 100)|int }}%</div>
+
+                                <div class="percent-label">Complete</div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="progress-section">
+                        <div class="circular-progress">
+                            <div class="episodes-count-display">
+                                    <div class="count-value">{{ item.episodes_watched }}</div>
+                                    <div class="count-label">Episodes</div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                        <!---Episodes controls-->
+                        <div class="episodes-controls">
+                            <button class="episode-btn episode-decrease" data-item-id="{{ item.id }}" {% if item.episodes_watched == 0 %}disabled{% endif %}> - Episodes</button>
+                            <button class="episode-btn episode-increase" data-item-id="{{ item.id }}">+ Episode</button>
+                        </div>
+
+                        <!--Status Badge-->
+                        <div class="status-badge status-{{ item.status }}">
+                            {{ item.status.replace('_', ' ').title() }}
+                        </div>
+
+                        <!--added date-->
+                        <div class="added-date">
+                            Added {{ item.added_at.strftime('%b, %d, %Y') }}
+                        </div>
+
+                        <!--Actions-->
+                        <div class="card-actions">
+                            <a href="{{ url_for('main.anime_details', anime_id=item.anime_id) }}" class="btn btn-secondary btn-small">
+                                Details
+                            </a>
+
+                            <button class="btn btn-danger btn-small remove-btn" data-item-id="{{ item.id }}" data-anime-title="{{ item.anime_title }}">
+                                Remove
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+            </div>
+        {% else %}
+        <!--Empty state-->
+        <div class="empty-state">
+            <div class="empty-icon">🎈</div>
+            <h2>No anime in this category</h2>
+            <p>Browse and add anime to your watchlist to see them here!</p>
+
+            <a href="{{ url_for('main.index') }}" class="btn btn-primary">
+                Search Anime
+            </a>
+        </div>
+        {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
