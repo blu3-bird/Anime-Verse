@@ -1,5 +1,5 @@
 # app/main/routes.py
-from flask import render_template, flash , request, redirect, url_for
+from flask import render_template, flash , request, redirect, url_for , jsonify
 from flask_login import login_required , current_user
 from app.main import main
 from app.services.jikan_service import JikanService
@@ -88,6 +88,41 @@ def watchlist():
                            total_episodes=total_episodes,
                            avg_rating=avg_rating)
 
+@main.route('/watchlist/episode/increment/<int:item_id>', methods=['POST'])
+@login_required
+def increment_episodes(item_id):
+    """Increment episodes count with validation"""
+
+    # Get the watchlist item from database
+    item = Watchlist.query.get_or_404(item_id)
+
+    if item.user_id != current_user.id:
+        return jsonify({'error': 'Unauthorized'}), 403
+    
+    # Validation Check if already at maximum episodes
+    if item.total_episodes and item.episodes_watched >= item.total_episodes:
+        return jsonify({'error': 'Already at maximum episodes'}), 400
+    item.episodes_watched += 1
+
+    # Auto-complete if user just finished all episodes, mark a completed.
+
+    auto_completed = False
+    if item.total_episodes and item.episodes_watched == item.total_episodes:
+        if item.status != 'completed':
+            item.status = 'completed'
+            auto_completed = True
+        try:
+            db.session.commit()
+            return jsonify({
+                'success': True,
+                'episodes_watched': item.episodes_watched,
+                'total_episodes': item.total_episodes,
+                'status': item.status,
+                'auto-completed' : auto_completed
+            }), 200
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'error': 'Failed to update episode count'}), 500
 
 @main.route('/anime/<int:anime_id>')
 def anime_details(anime_id):
