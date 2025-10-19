@@ -123,6 +123,42 @@ def increment_episodes(item_id):
         except Exception as e:
             db.session.rollback()
             return jsonify({'error': 'Failed to update episode count'}), 500
+        
+
+@main.route('/watchlist/episode/decrement/<int:item_id>', methods=['POST'])
+@login_required
+def decrement_episode(item_id):
+    """Decrement episode count with reverse auto-complete logic"""
+
+    item = Watchlist.query.get_or_404(item_id)
+
+    if item.user_id != current_user.id:
+        return jsonify({'error': 'Unauthorized'}), 403
+    
+    if item.episodes_watched <= 0:
+        return jsonify({'error': 'Already at 0 Episodes'}), 400
+    item.episodes_watched -= 1
+
+    # Reverse auto-complted
+    status_changed = False
+    if item.status == 'completed' and item.total_episodes:
+        if item.episodes_watched < item.total_episodes:
+            item.status = 'watching'
+            status_changed = True
+
+    try:
+        db.sessin.commit()
+
+        return jsonify ({
+            'success': True,
+            'episodes_watched': item.episodes_watched,
+            'total_episodes': item.total_episodes,
+            'status': item.status,
+            'status_changed': status_changed
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({ 'error': 'Failed to update episode count' }), 500
 
 @main.route('/anime/<int:anime_id>')
 def anime_details(anime_id):
