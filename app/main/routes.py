@@ -159,6 +159,32 @@ def decrement_episode(item_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({ 'error': 'Failed to update episode count' }), 500
+    
+@main.route('/watchlist/remove/<int:item_id>', methods=['DELETE'])
+@login_required
+def remove_from_watchlist(item_id):
+    """Remove anime from user's watchlist"""
+
+    item = Watchlist.query.get_or_404(item_id)
+
+    if item.user_id != current_user.id:
+        return jsonify({'error': 'Unauthorized'}), 403
+    
+    anime_title = item.anime_title
+
+    db.session.delete(item)
+
+    try:
+        db.session.commit()
+        return jsonify({
+            'success': True,
+            'message': f'{anime_title} removed from the watchlist',
+            'anime_title': anime_title
+        }), 200
+    
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Failed to remove from watchlist'}), 500
 
 @main.route('/anime/<int:anime_id>')
 def anime_details(anime_id):
