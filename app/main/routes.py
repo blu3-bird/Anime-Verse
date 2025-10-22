@@ -102,6 +102,7 @@ def increment_episodes(item_id):
     # Validation Check if already at maximum episodes
     if item.total_episodes and item.episodes_watched >= item.total_episodes:
         return jsonify({'error': 'Already at maximum episodes'}), 400
+    
     item.episodes_watched += 1
 
     # Auto-complete if user just finished all episodes, mark a completed.
@@ -111,18 +112,18 @@ def increment_episodes(item_id):
         if item.status != 'completed':
             item.status = 'completed'
             auto_completed = True
-        try:
-            db.session.commit()
-            return jsonify({
-                'success': True,
-                'episodes_watched': item.episodes_watched,
-                'total_episodes': item.total_episodes,
-                'status': item.status,
-                'auto-completed' : auto_completed
-            }), 200
-        except Exception as e:
-            db.session.rollback()
-            return jsonify({'error': 'Failed to update episode count'}), 500
+    try:
+        db.session.commit()
+        return jsonify({
+            'success': True,
+            'episodes_watched': item.episodes_watched,
+            'total_episodes': item.total_episodes,
+            'status': item.status,
+            'auto-completed' : auto_completed
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': 'Failed to update episode count'}), 500
         
 
 @main.route('/watchlist/episode/decrement/<int:item_id>', methods=['POST'])
@@ -147,7 +148,7 @@ def decrement_episode(item_id):
             status_changed = True
 
     try:
-        db.sessin.commit()
+        db.session.commit()
 
         return jsonify ({
             'success': True,
