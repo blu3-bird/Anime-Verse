@@ -35,7 +35,7 @@ document.addEventListener('keydown', function(event) {
 //Auto-close flash messages after 5 seconds
 
 document.addEventListener('DOMContentLoaded', function(){
-    const alerts = document.querySelector('.alert');
+    const alerts = document.querySelectorAll('.alert');
 
     alerts.forEach(function(alert) {
         setTimeout(function(){
