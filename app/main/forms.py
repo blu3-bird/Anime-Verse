@@ -35,3 +35,30 @@ class AddToWatchlistForm(FlaskForm):
     )
 
     submit = SubmitField('😈 Add to Watchlist')
+
+class RateAnimeForm(FlaskForm):
+    """Form for rating an anime"""
+
+    #Hidden fields
+    anime_id = HiddenField('Anime ID', validators=[DataRequired()])
+    anime_title = HiddenField('Anime Title', validators=[DataRequired()])
+
+    score = SelectField(
+        'Rating',
+        choices=[
+            (10, '⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐ (10 - Masterpiece)'),
+            (9, '⭐⭐⭐⭐⭐⭐⭐⭐⭐ (9 - Excellent)'),
+            (8, '⭐⭐⭐⭐⭐⭐⭐⭐ (8 - Very Good)'),
+            (7, '⭐⭐⭐⭐⭐⭐⭐ (7 - Good)'),
+            (6, '⭐⭐⭐⭐⭐⭐ (6 - Fine)'),
+            (5, '⭐⭐⭐⭐⭐ (5 - Average)'),
+            (4, '⭐⭐⭐⭐ (4 - Poor)'),
+            (3, '⭐⭐⭐ (3 - Bad)'),
+            (2, '⭐⭐ (2 - Very Bad)'),
+            (1, '⭐ (1 - Terrible)')
+        ],
+        coerce=int,
+        validators=[DataRequired()]
+    )
+
+    submit = SubmitField('Submit Rating')
