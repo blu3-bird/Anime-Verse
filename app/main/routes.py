@@ -4,9 +4,8 @@ from flask_login import login_required , current_user
 from app.main import main
 from app.services.jikan_service import JikanService
 from app import db 
-from app.models import Watchlist
-from app.main.forms import AddToWatchlistForm
-
+from app.models import Watchlist , Rating
+from app.main.forms import AddToWatchlistForm, RateAnimeForm
 
 @main.route('/')
 def index():
@@ -205,25 +204,41 @@ def anime_details(anime_id):
     #Check if anime is in user's watchlist (if logged in)
 
     in_watchlist = None
+
+    # check if user has rated this anime.
+    user_rating = None
+
     if current_user.is_authenticated:
         in_watchlist =  Watchlist.query.filter_by(
             user_id=current_user.id,
             anime_id=anime_id
         ).first()
 
+        user_rating = Rating.query.filter_by(
+            user_id=current_user.id,
+            anime_id=anime_id
+        ).first()
+
     #create form and pre fill with anime data
-    form=AddToWatchlistForm()
-    form.anime_id.data = anime['mal_id']
-    form.anime_title.data = anime['title']
-    form.anime_image.data = anime['images']['jpg']['large_image_url']
-    form.total_episodes.data = anime.get('episodes', '')
+    watchlist_form=AddToWatchlistForm()
+    watchlist_form.anime_id.data = anime['mal_id']
+    watchlist_form.anime_title.data = anime['title']
+    watchlist_form.anime_image.data = anime['images']['jpg']['large_image_url']
+    watchlist_form.total_episodes.data = anime.get('episodes', '')
+
+    #Create rating form
+    rating_form = RateAnimeForm()
+    rating_form.anime_id.data = anime['mal_id']
+    rating_form.anime_title.data = anime['title']
     
     return render_template('main/anime_details.html', 
                            anime=anime,
                            from_search=from_search,
                            search_page=page,
-                           form=form,
-                           in_watchlist=in_watchlist)
+                           form=watchlist_form,
+                           in_watchlist=in_watchlist,
+                           user_rating=user_rating,
+                           rating_form=rating_form)
 
 
 @main.route('/watchlist/add', methods=['POST'])
@@ -272,3 +287,74 @@ def add_to_watchlist():
     # If form validation failed
     flash("Please check your input and try again., 'danger'")
     return redirect(url_for('main.anime_details', anime_id=request.form.get('anime_id', 1)))
+
+@main.route('/rating/add', methods=['POST'])
+@login_required
+def add_rating():
+    """Add or update rating for an anime"""
+
+    form = RateAnimeForm()
+
+    if form.validate_on_submit():
+        #Check if user already rated this anime
+        existing_rating = Rating.query.filter_by(
+            user_id=current_user.id,
+            anime_id=form.anime_id.data
+        ).first()
+
+        if existing_rating:
+            existing_rating.score = form.score.data
+            action = 'updated'
+        
+        else:
+            #create a new rating
+            rating = Rating(
+                user_id=current_user.id,
+                anime_id=form.anime_id.data,
+                anime_title=form.anime_title.data,
+                score=form.score.data
+            )
+            db.session.add(rating)
+            action = 'added'
+
+        try:
+            db.session.commit()
+            flash(f'Rating {action} successfully! You rated {form.anime_title.data} {form.score.data}/10', 'success')
+
+        except Exception as e:
+            db.session.rollback()
+            flash('Failed to save rating. Please try again.', 'danger')
+            print(f'Error savig rating: {e}')
+
+        return redirect(url_for('main.anime_details', anime_id=form.anime_id.data))
+    
+    # if form validation failed
+    flash('Please select a rating', 'danger')
+    return redirect(url_for('main.index'))
+
+@main.route('/rating/delete/<int:anime_id>', methods=['POSt'])
+@login_required
+def delete_rating(anime_id):
+    """Delete user's rating for an anime"""
+
+    rating = Rating.query.filter_by(
+        user_id=current_user.id,
+        anime_id=anime_id   
+    ).first()
+
+    if not rating:
+        flash('Rating not found', 'warning')
+        return redirect(url_for('main.anime_details', anime_id=anime_id))
+    
+    anime_title = rating.anime_title
+
+    try:
+        db.session.delete(rating)
+        db.session.commit()
+        flash(f'Rating for {anime_title} deleted successfully.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash('Failed to delete rating', 'danger')
+        print('Error deleting rating: {e}')
+
+    return redirect(url_for('main.anime_details', anime_id=anime_id))
