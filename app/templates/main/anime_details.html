@@ -137,6 +137,108 @@
         </div>
     </div>
 
+    <!--Rating Section-->
+
+    {% if current_user.is_authenticated %}
+    
+    <div class="container">
+        <div class="rating-section anime-section">
+            <h3>Your Rating</h3>
+
+            {% if user_rating %}
+                <!--User has already rated this anime-->
+                <div class="user-rating-display">
+                    <div class="rating-display-header">
+                        <div class="rating-stars-display">
+                            {% for i in range(1, 11) %}
+                                {% if i <= user_rating.score %}
+                                    <span class="star-filled">🌟</span>
+                                {% else %}
+                                    <span class="star-empty">☆</span>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="rating-score-text">
+                            <span class="score-large">{{ user_rating.score }}</span>
+                            <span class="score-label">/ 10</span>
+                        </div>
+                    </div>
+
+                    <!--Rated Date-->
+                    <p class="rating-date">
+                        Rated on {{ user_rating.created_at.strftime('%B, %d, %Y') }}
+                        {% if user_rating.updated_at and user_rating.updated_at != user_rating.created_at %}
+                            <span class="updated-tag">(Updated {{ user_rating.updated_at.strftime('%B %d, %Y') }})</span>
+                        {% endif %}
+                    </p>
+
+                    <!--Action buttons-->
+                    <div class="rating-actions">
+                        <button class="btn btn-secondary btn-small" id="edit-rating-btn">
+                            Edit Rating
+                        </button>
+                        <form method="POST" action="{{ url_for('main.delete_rating', anime_id=anime.mal_id) }}" style="display: inline;" onsubmit="return confirm('Delete your Rating?');">
+                            <button type="submit" class="btn btn-danger btn-small">
+                                Delete Rating
+                            </button>
+                        </form>
+                    </div>
+
+                    <!--Hidden Edit Form(shows when usere clicks edit)-->
+                    <div class="rating-edit-form" id="rating-edit-form" style="display: none;">
+                        <h4>Update your Rating</h4>
+                        <form method="POST" action="{{ url_for('main.add_rating') }}" id="edit-rating-form-element">
+                            {{ rating_form.hidden_tag() }}
+                            {{ rating_form.anime_id }}
+                            {{ rating_form.anime_title }}
+
+                            <!--Star rating selector-->
+                            <div class="star-rating-selector">
+                                {% for value, label in rating_form.score.choices %}
+                                    <label class="star-option {% if value == user_rating.score %}selected{% endif %}">
+                                        <input type="radio" name="score" value="{{ value }}" {% if value == user_rating.score %}checked{% endif %}>
+                                        <span class="star-label">{{ label }}</span>
+                                    </label>
+                                {% endfor %}
+                            </div>
+
+                            <div class="form-actions">
+                                {{ rating_form.submit(class="btn btn-secondary btn-small") }}
+                                <button type="button" class="btn btn-secondary btn-small" id="cancel-edit-btn">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            {% else %}
+            <div class="rating-form-container">
+                <p class="rating-prompt">How would you rate <strong>{{ anime.title }}</strong></p>
+
+                <form method="POST" action="{{ url_for('main.add_rating') }}" id="rating-form">
+                    {{ rating_form.hidden_tag() }}
+                    {{ rating_form.anime_id }}
+                    {{ rating_form.anime_title }}
+
+                    <!--Star rating selector(1-10)-->
+                    <div class="star-rating-selector">
+                        {% for value, label in rating_form.score.choices %}
+                            <label class="star-option">
+                                <input type="radio" name="score" value="{{ value }}" required>
+                                <span class="star-label">{{ label }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+
+                    {{ rating_form.submit(class="btn btn-primary") }}
+                </form>
+
+                
+            </div>
+        {% endif %}
+        </div>
+    </div>
+
+    {% endif %}
+
     <!--Synopsis-->
     <div class="container">
         <div class="anime-section">
@@ -207,4 +309,11 @@
         {% endif %}
     </div>
 </div>
+
+
+{% endblock %}
+
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/rating.js') }}"></script>
 {% endblock %}
