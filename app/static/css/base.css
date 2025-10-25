@@ -1240,6 +1240,345 @@ a:hover {
     border-radius: 12px;
 }
 
+/* == Rating System == */
+
+.rating-section {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.rating-section h3{
+    color: var(--accent-primary);
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.rating-form-container {
+    padding: 1rem 0;
+}
+
+.rating-prompt {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.rating-prompt strong {
+    color: var(--accent-primary);
+}
+
+.star-rating-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.star-option {
+    background: var(--bg-tertiary);
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    padding: 0.75rem 1.25rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hiden radio btns but keep them functional */
+.star-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.star-label {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    user-select: none;
+    width: 100%;
+}
+
+.star-option:hover {
+    border-color: var(--accent-primary);
+    background: rgba(233, 69, 96, 0.1);
+    transform: translateX(5px);
+}
+
+.star-option:hover .star-label {
+    color: var(--text-primary);
+}
+
+.star-option input[type="radio"]:checked ~ .star-label {
+    color: var(--accent-primary);
+    font-weight: 600;
+}
+
+
+.star-option.selected,
+.star-option input[type="radio"]:checked {
+    border-color: var(--accent-primary);
+    background: linear-gradient(135deg, rgba(233,69,96,0.15) 0%, rgba(233,69,96,0.05) 100%);
+    box-shadow: 0 0 0 20px rgba(233, 69, 96, 0.2);
+}
+
+.star-option input[type="radio"]:checked::before {
+    content: '⪧';
+    position: absolute;
+    right: 1rem;
+    color: var(--accent-primary);
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.rating-form-container .btn-primary {
+    margin-top: 1rem;
+    width: 100%;
+    max-width: 600px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.user-rating-display {
+    padding: 1rem 0;
+}
+
+.rating-display-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.rating-star-display {
+    display: flex;
+    gap: 0.25rem;
+    font-size: 1.8rem;
+}
+
+.star-filled {
+    color: var(--accent-primary);
+    text-shadow: 0 0 10px rgba(233, 69, 96, 0.5);
+    animation: starPulse 2s ease-in-out infinite;
+}
+
+.star-empty {
+    color: var(--text-muted);
+    opacity: 0.4;
+}
+
+/* Subtle pulse animation for filled stars */
+@keyframes starPulse {
+    0%, 100% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+    50% {
+        transform: scale(1.05);
+        filter: brightness(1.2);
+    }
+}
+
+.rating-score-text {
+    display: flex;
+    align-items: baseline;
+    gap: 0.3rem;
+}
+
+.score-large {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--accent-primary);
+    line-height: 1;
+    text-shadow: 0 2px 10px rgba(233, 69, 96, 0.3);
+}
+
+.rating-score-text .score-label {
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+}
+
+.rating-data {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.updated-tag {
+    color: var(--accent-primary);
+    font-style: italic;
+}
+
+/* Rating action btns */
+.rating-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.rating-actions .btn {
+    min-width: 150px;
+}
+
+.rating-actions form {
+    margin: 0;
+}
+
+/* Edit rating form */
+.rating-edit-form {
+    margin-top: 2rem;
+    padding: 2rem;
+    background: var(--bg-tertiary);
+    border: 2px solid var(--accent-primary);
+    border-radius: 12px;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.rating-edit-form h4 {
+    color: var(--accent-primary);
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.rating-edit-form .star-rating-selector {
+    max-width: 100%;
+}
+
+.rating-edit-form .form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.rating-edit-form .form-actions .btn {
+    min-width: 120px;
+}
+
+/* Responsive Design */
+
+@media (max-width: 768px) {
+    .rating-display-header{
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .rating-star-display{
+        font-size: 1.5rem;
+    }
+
+    .score-large {
+        font-size: 2.5rem;
+    }
+
+    .star-rating-selector{
+        max-width: 100%;
+    }
+
+    .star-option {
+        padding: 0.6rem 1rem;
+    }
+
+    .star-label {
+        font-size: 0.9rem;
+    }
+
+    .rating-actions {
+        flex-direction: column;
+    }
+
+    .rating-actions .btn {
+        width: 100%;
+    }
+
+    .rating-edit_form {
+        padding: 1.5rem;
+    }
+
+    .rating-edit-form .form-actions {
+        flex-direction: column;
+    }
+
+    .rating-edit-form .form-actions .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .rating-section h3 {
+        font-size: 1.3rem;
+    }
+
+    .star-option {
+        padding: 0.5rem 0.75rem;
+    }
+
+    .star-label {
+        font-size: 0.85rem;
+    }
+}
+
+/* Watchlist rating display */
+
+.watchlist-user-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: linear-gradient(135deg, rgba(233,69,96,0.1) 0%, rgba(233,69,96,0.05) 100%);
+    border: 1px solid var(--accent-primary);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.watchlist-user-rating-icon {
+    color: var(--accent-primary);
+    font-size: 1rem;
+}
+
+.watchlist-user-rating-text {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.watchlist-user-rating-score {
+    color: var(--accent-primary);
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+
+
+
 /*Responsive */
 
 @media (mex-width: 768px) {
@@ -1278,7 +1617,7 @@ a:hover {
 
 .page-info {
     color: var(--text-secondary);
-    font-weight: 500;
+    font-weight: 500;   
     padding: 0 1rem;
     font-size: 1rem;
 }
