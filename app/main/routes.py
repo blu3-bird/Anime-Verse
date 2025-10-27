@@ -63,6 +63,12 @@ def watchlist():
     # Get the items for the active tab
     active_items = items_by_status[active_status]
 
+    # Dictionary of rating for quick lookup
+    user_rating_dict = {}
+    all_ratings = current_user.ratings.all()
+    for rating in all_ratings:
+        user_rating_dict[rating.anime_id] = rating
+
     #Calculate stats
     total_anime = len(all_items)
     total_episodes = sum(item.episodes_watched or 0 for item in all_items)
@@ -85,7 +91,8 @@ def watchlist():
                            status_counts=status_counts,
                            total_anime=total_anime,
                            total_episodes=total_episodes,
-                           avg_rating=avg_rating)
+                           avg_rating=avg_rating,
+                           user_ratings = user_rating_dict)
 
 @main.route('/watchlist/episode/increment/<int:item_id>', methods=['POST'])
 @login_required
