@@ -139,14 +139,14 @@
                     </div>
                     {% endif %}
 
-                        <!--User Rating display-->
-                        {% if item.anime_id in user_ratings %}
-                        <div class="watchlist-user-rating">
-                            <span class="watchlist-user-rating-icon">௹</span>
-                            <span class="watchlist-user-rating-text">Your Rating:</span>
-                            <span class="watchlist-user-rating-score">{{ user_ratings[item.anime_id].score }}/10</span>
-                        {% endif %}
-                        </div>
+                    <!--User Rating display-->
+                    {% if item.anime_id in user_ratings %}
+                    <div class="watchlist-user-rating">
+                        <span class="watchlist-user-rating-icon">௹</span>
+                        <span class="watchlist-user-rating-text">Your Rating:</span>
+                        <span class="watchlist-user-rating-score">{{ user_ratings[item.anime_id].score }}/10</span>
+                    </div>
+                    {% endif %}
 
                         <!---Episodes controls-->
                         <div class="episodes-controls">
