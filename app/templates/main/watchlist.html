@@ -139,6 +139,15 @@
                     </div>
                     {% endif %}
 
+                        <!--User Rating display-->
+                        {% if item.anime_id in user_ratings %}
+                        <div class="watchlist-user-rating">
+                            <span class="watchlist-user-rating-icon">௹</span>
+                            <span class="watchlist-user-rating-text">Your Rating:</span>
+                            <span class="watchlist-user-rating-score">{{ user_ratings[item.anime_id].score }}/10</span>
+                        {% endif %}
+                        </div>
+
                         <!---Episodes controls-->
                         <div class="episodes-controls">
                             <button class="episode-btn episode-decrease" data-item-id="{{ item.id }}" {% if item.episodes_watched == 0 %}disabled{% endif %}> - Episodes</button>
