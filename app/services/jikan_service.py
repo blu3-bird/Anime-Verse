@@ -119,4 +119,44 @@ class JikanService:
                 }
             return {
                 'results': [], 'has_next_page': False, 'current_page':  page
-            }    
+            } 
+
+
+    @staticmethod
+    def get_seasonal_anime(year: int = None, season: str = None) -> Dict:
+        """
+        Get anime airing in a specific season
+
+        Args:
+            year (int): Year(e.g., 2024). If None, gets current season
+            season(str): 'winter', 'spring', 'summer', 'fall'. If None, gets current 
+
+        Returns:
+            Dict: Dictionary with 'results' (list of anime), 'season' and 'year'
+
+        Example:
+            get_seasonal_anime() # current season (automatic)
+            get_seasonal_anime(2024, 'winter')
+        """
+        # Decide which endpoint to use
+        if year and season:
+            # User wants specific season
+            endpoint = f'/seasons/{year}/{season}'
+
+        else:
+            # Get current season automatically
+            endpoint = '/seasons/now'
+
+        # Make API Request.
+        response =  JikanService._make_request(endpoint)
+
+        if response and 'data' in response:
+            return{
+                'results': response['data'],
+                'season': response.get('season', 'Unknown'), # extracting season and year from response
+                'year': response.get('year', 0)
+            }
+        
+        return{
+            'results': [], 'season': 'Unknown', 'year': 0
+        }
