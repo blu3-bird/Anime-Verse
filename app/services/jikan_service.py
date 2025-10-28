@@ -160,3 +160,39 @@ class JikanService:
         return{
             'results': [], 'season': 'Unknown', 'year': 0
         }
+    
+    @staticmethod
+    def get_currently_airing(page: int= 1, limit: int = 20) -> Dict:
+        """
+        Get anime that are currently airing (ongoing shows)
+        
+        Args:
+            page (int): Page number (default: 1)
+            limit (int): Results per page (default: 20)
+
+        Returns:
+            Dict: Dictionary with 'results' (list of anime) and 'has_next_page'(bool)
+
+        Example:
+            get_currently_airing() # Get page 1 of airing anime
+            get_currennty-airing(page=2, limit=10) # Get page 2, 10 resutls
+        """
+
+        endpoint = f'/anime?status=airing&page={page}&limit={limit}&order_by=popularity'
+
+        response = JikanService._make_request(endpoint)
+
+        if response and 'data' in response:
+            has_next_page = False
+            if 'pagination' in response:
+                has_next_page = response['pagination'].get('has_next_page', False)
+                
+            return{
+                'results': response['data'],
+                'has_next_page': has_next_page,
+                'current_page': page
+                }
+        return{
+            'results': [], 'has_next_page': False,
+            'current_page': page
+            }
