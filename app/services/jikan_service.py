@@ -84,3 +84,39 @@ class JikanService:
             return response['data']
         
         return None
+
+    @staticmethod
+    def get_top_anime(page: int = 1, limit: int = 20) -> Dict:
+            """
+            Get most popular anime from MyAnimeList
+
+            Args:
+                page(int): Which page of results (1,2,3...)
+                limit (int): How many results per page (max 20)
+
+            Returns:
+                Dict: Dictionary with 'results' (list of anime) and 'has_next_page' (bool)
+            """
+
+        #Build the API endpoint URL
+            endpoint = f'/top/anime?page={page}&limit={limit}&filter=bypopularity'
+
+        # Make the request to Jikan API
+            response = JikanService._make_request(endpoint)
+
+        #check if we got valid data back
+            if response and 'data' in response:
+            #check if there's a next page
+                has_next_page = False
+                if 'pagination' in response:
+                    has_next_page = response['pagination'].get('has_next_page', False)
+
+            #Return organized data
+                return{
+                    'results': response['data'],
+                    'has_next_page': has_next_page,
+                    'current_page': page
+                }
+            return {
+                'results': [], 'has_next_page': False, 'current_page':  page
+            }    
