@@ -9,26 +9,64 @@ from app.main.forms import AddToWatchlistForm, RateAnimeForm
 
 @main.route('/')
 def index():
-    """Home page with search functionality"""
-    search_query = request.args.get('q', '').strip() 
-    page = request.args.get('page', 1, type=int)
+    """Home page with search functionality and anime sections"""
 
+    #get search query from URL
+
+    search_query = request.args.get('q', '').strip()
+    page = request.args.get('page', 1 , type=int)
+
+    # Initialise empty search data
     search_data = {'results': [], 'has_next_page': False}
-    #Get search query from URL parameters
 
-    # if user searched for something.
-    if search_query:   
+    # If user searched for something,  fetch search resutls
+    if search_query:  
         search_data = JikanService.search_anime(search_query, page=page)
 
-        #Show message if not results found
+        #Show message if no results found
         if not search_data['results']:
             flash(f'No results found for "{search_query}"', 'info')
 
+    # Fetch data for homepage sections (only if not searching)
+    hero_anime = []
+    top_anime = []
+    seasonal_anime = []
+    airing_anime = []
+    season_name = ''
+    season_year = 0
+
+    if not search_query:
+
+        #Fetch hero carousel data (top 12 anime for featured carousel)
+        hero_data = JikanService.get_top_anime(page=1, limit=12)
+        hero_anime = hero_data['results']
+
+        #Fetch top anime section (20 anime for horizontal scroll)
+        top_data =JikanService.get_top_anime(page=2, limit=20)
+        top_anime = top_data['results']
+
+        #Fetch seasonal anime section
+        seasonal_data = JikanService.get_seasonal_anime()
+        seasonal_anime = seasonal_anime['results'][:20] # limit to 20
+        season_name = seasonal_data['season']
+        season_year = seasonal_data['year']
+
+        #Fetch currently airing anime section
+        airing_data =  JikanService.get_currently_airing(page=1, limit=20)
+        airing_anime = airing_data['results']
+
+    # Return template with all data
     return render_template('index.html',
                            search_query=search_query,
                            search_results=search_data['results'],
                            has_next_page=search_data['has_next_page'],
-                           current_page=page)
+                           current_page=page,
+                           hero_anime=hero_anime,
+                           top_anime=top_anime,
+                           seasonal_anime=seasonal_anime,
+                           airing_anime=airing_anime,
+                           season_name=season_name,
+                           season_year=season_year)
 
 @main.route('/watchlist')
 @login_required
