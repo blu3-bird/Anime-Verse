@@ -267,4 +267,8 @@
     </div>
     {% endif %}
 </div>
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/carousel.js') }}"></script>
+{% endblock %}
+
 {% endblock %}
