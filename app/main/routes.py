@@ -47,7 +47,7 @@ def index():
 
         #Fetch seasonal anime section
         seasonal_data = JikanService.get_seasonal_anime()
-        seasonal_anime = seasonal_anime['results'][:20] # limit to 20
+        seasonal_anime = seasonal_data['results'][:20] # limit to 20
         season_name = seasonal_data['season']
         season_year = seasonal_data['year']
 
