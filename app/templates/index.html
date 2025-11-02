@@ -204,39 +204,143 @@
     </div>
     {% else %}
 
-    <!--Featured anime section(when no search)-->
-    <div class="featured-section">
-        <h2>Popular Anime</h2>
-        <p class="section-subtitle">Treading anime everyone's watching</p>
+    <!--Horizontal scroll sections(only if NOT Searching)-->
 
-        <div class="anime-grid">
-            <!--Placeholder cards we'll populate with real data later-->
-            <div class="anime-card">
-                <div class="anime-card-placeholder">
-                    <p>Loading Anime...</p>
-                    <small>Coming soon via Jikan API</small>
-                </div>
+    <!-- Top anime-->
+
+    <div class="horizontal-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>🔥 Top Anime</h2>
+                <p class="section-subtitle">Most popular anime of all time</p>
             </div>
-            <div class="anime-card">
-                <div class="anime-card-placeholder">
-                    <p>Loading anime...</p>
-                    <small>Coming Soon via Jikan API</small>
-                </div>
-            </div>
-            <div class="anime-card">
-                <div class="anime-card-placeholder">
-                    <p>Loading Anime</p>
-                    <small>Coming soon via Jikan API</small>
-                </div>
-            </div>
-            <div class="anime-card">
-                <div class="anime-card-placeholder">
-                    <p>Loading anime</p>
-                    <small>Coming Soon via Jikan API</small>
+
+            <div class="horizontal-scroll-container">
+                <div class="horizontal-scroll">
+                    {% for anime in top_anime %}
+                    <div class="horizontal-card">
+                        <a href="{{ url_for('main.anime_details', anime_id=anime.mal_id) }}" class="card-link">
+                            <div class="horizontal-card-image">
+                                <img src="{{ anime.images.jpg.large_image_url }}" alt="{{ anime.title }}" loading="lazy">
+
+                                <!--Rating Badge-->
+                                {% if anime.score %}
+                                <div class="card-rating">
+                                    🌟{{ anime.score }}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="horizontal-card-content">
+                                <h3 class="horizontal-card-title">{{ anime.title }}</h3>
+
+                                <div class="horizontal-card-meta">
+                                    {% if anime.type %}
+                                    <span class="meta-tag">{{ anime.type }}</span>
+                                    {% endif %}
+
+                                    {% if anime.episodes %}
+                                    <span class="meta-tag">{{ anime.episodes }} eps</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor%}
                 </div>
             </div>
         </div>
     </div>
+
+    <!--Seasonal Anime Section-->
+
+    <div class="horizontal-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>🎗️ Seasonal Anime</h2>
+                <p class="section-subtitle"> Currenty Airing this season </p>
+            </div>
+
+            <div class="horizontal-scroll-container">
+                <div class="horizontal-scroll">
+                    {% for anime in seasonal_anime %}
+                    <div class="horizontal-card">
+                        <a href="{{ url_for('main.anime_details', anime_id=anime.mal_id) }}" class="card-link" >
+                            <div class="horizontal-card-image">
+                                <img src="{{ anime.images.jpg.large_image_url }}" alt="{{ anime.title }}" loading="lazy">
+
+                                {% if anime.score %}
+                                <div class="card-rating">
+                                    🎈 {{ anime.score }}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="horizontal-card-content">
+                                <h3 class="horizontal-card-title" >{{ anime.title }}</h3>
+
+                                <div class="horizontal-card-meta">
+                                    {% if anime.type %}
+                                    <span class="meta-tag">{{ anime.type }}</span>
+                                    {% endif %}
+
+                                    {% if anime.episodes %}
+                                    <span class="meta-tag">{{ anime.episodes }} eps</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--currently airing section-->
+    <div class="horizontal-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>🦒 Currently Airing</h2>
+                <p class="section-subtitle">Anime Broadcasting right now</p>
+            </div>
+
+            <div class="horizontal-scroll-container">
+                <div class="horizontal-scroll">
+                    {% for anime in airing_anime %}
+                    <div class="horizontal-card">
+                        <a href="{{ url_for('main.anime_details', anime_id=anime.mal_id) }}" class="card-link">
+                            <div class="horizontal-card-image">
+                                <img src="{{ anime.images.jpg.large_image_url }}" alt="{{ anime.title }}" loading="lazy">
+
+                                {% if anime.score %}
+                                <div class="card-rating">
+                                    🫎 {{ anime.score }}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="horizontal-card-content">
+                                <h3 class="horizontal-card-title">{{ anime.title }}</h3>
+
+                            <div class="horizontal-card-meta">
+                                {% if anime.type %}
+                                <span class="meta-tag">{{ anime.type }}</span>
+                                {% endif %}
+
+                                {% if anime.status %}
+                                <span class="meta-tag status-airing">{{ anime.status }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
     {% endif %}
 
 
