@@ -15,6 +15,11 @@ class User(UserMixin, db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     last_seen = db.Column(db.DateTime, default=datetime.utcnow())
 
+    bio = db.Column(db.Text)
+    avatar = db.Column(db.String(100), default='default')
+
+    theme_preference = db.Column(db.String(20), default = 'dark')
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
