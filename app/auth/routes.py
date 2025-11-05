@@ -72,5 +72,40 @@ def logout():
 @auth.route('/profile')
 @login_required
 def profile():
-    """User Profile Tab"""
-    return render_template('auth/profile.html', title = 'Profile' , user = current_user)
+    """User Profile page with Stats"""
+
+    watchlist_items = current_user.watchlist_items.all()
+
+    total_anime = len(watchlist_items)
+
+    total_episodes = sum(item.episodes_watched or 0 for item in watchlist_items)
+
+    completed_anime = sum(1 for item in watchlist_items if item.status == 'completed')
+
+    user_ratings = current_user.ratings.all()
+
+    avg_rating = 0
+    if user_ratings:
+        avg_rating = sum(r.score for r in user_ratings) / len(user_ratings)
+
+    
+    # prepare avatar data
+    initials = ''
+    if current_user.name:
+        name_parts = current_user.name.split()
+
+        if len(name_parts) >= 2:
+            initials = name_parts[0][0] + name_parts[1][0]
+        else:
+            initials = name_parts[0][0:2]
+        
+    initials = initials.upper()
+
+    return render_template('auth/profile.html', 
+                           title = 'Profile', 
+                           user = current_user,
+                           total_anime = total_anime,
+                           total_episodes=total_episodes,
+                           completed_anime=completed_anime,
+                           avg_rating= avg_rating,
+                           initials=initials)
