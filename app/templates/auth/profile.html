@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ user.username }}'s Profile ~ Anime Verse {% endblock %}
+
+{% block content %}
+<div class="profile-page">
+    <!-- Profile header section-->
+
+    <div class="profile-header-section">
+        <div class="container">
+            <div class="profile-header">
+
+                <!--Avatar-->
+                <div class="profile-avatar-container">
+                    {% if user.avatar == 'initials' %}
+                    <!--Initials Avatar-->
+
+                    <div class="avatar-initials">
+                        {{ initials }}
+                    </div>
+                    {% else %}
+                        <!--Selected Avatar-->
+                        <div class="avatar-selected avatar-{{ user.avatar }}">
+                            {{ user.avatar|replace('avatar', '') }}
+                        </div>
+                    {% endif %}
+
+                    <!--Change avatar button-->
+                    <button class="btn-change-avatar" id="change-avatar-btn">
+                        Change Avatar
+                    </button>
+                </div>
+
+                <!--User info-->
+                <div class="profile-info">
+                    <h1 class="profile-name">{{ user.name }}</h1>
+                    <p class="profile-username">@{{ user.username }}</p>
+                    <p class="profile-email">{{ user.email }}</p>
+                    <p class="profile-joined">Member since {{ user.created_at.strftime('%B %d, %Y') }}</p>
+
+                    <!--Bio-->
+                    <div class="profile-bio">
+                        {% if user.bio %}
+                            <p class="bio-text">{{ user.bio }}</p>
+                        {% else %}
+                            <p class="bio-empty"> No bio yet. Click "Edit Bio" to add one.</p>
+                        {% endif %}
+                    </div>
+
+                    <!-- Edit bio button-->
+                     <button class="btn btn-secondary btn-small" id="edit-bio-btn">
+                        Edit Bio
+                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats section-->
+
+    <div class="stats-section">
+        <div class="container">
+            <h2>Your Stats</h2>
+
+            <div class="stats-grid">
+
+                <!--Total anime-->
+                <div class="stat-card">
+                    <div class="stat-icon">👽</div>
+                    <div class="stat-content">
+                        <div class="stat-value">{{ total_anime }}</div>
+                        <div class="stat-label">Total anime</div>
+                    </div>
+                </div>
+
+                <!--Average Rating-->
+                <div class="stat-card">
+                    <div class="stat-icon">🎈</div>
+                    <div class="stat-content">
+                        <div class="stat-value">{{ "%.1f"|format(avg_rating) }}</div>
+                        <div class="stat-label">Avg Rating</div>
+                    </div>
+                </div>
+
+                <!--Episodes Watched-->
+                <div class="stat-card">
+                    <div class="stat-icon">🎗️</div>
+                    <div class="stat-content">
+                        <div class="stat-value">{{ total_episodes }}</div>
+                        <div class="stat-label">Episodes Watched</div>
+                    </div>
+                </div>
+
+                <!--Completed Anime-->
+                <div class="stat-card">
+                    <div class="stat-icon">🌻</div>
+                    <div class="stat-content">
+                        <div class="stat-value">{{ completed_anime }}</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Setting-->
+
+    <div class="settings-section">
+        <div class="container">
+            <h2>Settings</h2>
+
+            <!--appearance-->
+            <div class="settings-card">
+                <h3>Appearance</h3>
+                <div class="setting-item">
+                    <div class="setting-info">
+                    <label>Theme</label>
+                    <p class="setting-description">Choose your preferred color theme</p>
+                    </div>
+
+                <div class="theme-toggle-container">
+                    <button class="theme-option {% if user.theme_preference == 'dark' %}active{% endif %}" data-theme="dark">
+                        Dark Mode
+                    </button>
+
+                    <button class="theme-option {% if user.theme_preference == 'light' %}active{% endif %}" data-theme="light">
+                        Light Mode
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!--Account Infomation-->
+        <div class="settings-card">
+            <h3>Account Information</h3>
+
+            <div class="account-info-display">
+                <div class="info-row">
+                    <span class="info-label">Username:</span>
+                    <span class="info-value">{{ user.username }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Name:</span>
+                    <span class="info_value">{{ user.name }}</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Email:</span>
+                    <span class="info-value">{{ user.email }}</span>
+                </div>
+            </div>
+
+            <button class="btn btn-secondary" id="edit-info-btn">
+                Edit Info
+            </button>
+        </div>
+
+        <!--Security-->
+        <div class="settings-card">
+            <h3>Security</h3>
+            <button class="btn btn-secondary" id="change-password-btn">
+                Change Password
+            </button>
+        </div>
+
+        <!--Actions-->
+        <div class="settings-card danger-zone">
+            <h3>Account Actions</h3>
+
+            <div class="actions-buttons">
+                <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary">
+                    Logout
+                </a>
+                <button class="btn btn-danger" id="delete-account-btn">
+                    Delete Account
+                </button>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Modals-->
+
+<!--Avatar selection modal-->
+<div id="avatar-modal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeAvatarModal()">&times;</span>
+        <h2>Choose Your Avatar</h2>
+        
+        <div class="avatar-grid">
+            <!-- Initials (Default) -->
+            <div class="avatar-choice {% if user.avatar == 'initials' %}selected{% endif %}" data-avatar="initials">
+                <div class="avatar-initials">{{ initials }}</div>
+                <p>Initials</p>
+            </div>
+            
+            <!-- Avatar Options 1-12 -->
+            {% for i in range(1, 13) %}
+            <div class="avatar-choice {% if user.avatar == 'avatar_' ~ i %}selected{% endif %}" data-avatar="avatar_{{ i }}">
+                <div class="avatar-selected avatar-avatar_{{ i }}">{{ i }}</div>
+                <p>Avatar {{ i }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <button class="btn btn-primary" id="save-avatar-btn">Save Avatar</button>
+    </div>
+</div>
+
+<!-- Edit Bio Modal -->
+<div id="bio-modal" class="modal">
+    <div class="modal-content">
+        <span class="modal-close" onclick="closeBioModal()">&times;</span>
+        <h2>Edit Bio</h2>
+        
+        <form method="POST" action="{{ url_for('auth.profile') }}" id="bio-form">
+            <div class="form-group">
+                <label for="bio">Bio (max 500 characters)</label>
+                <textarea name="bio" id="bio" rows="5" maxlength="500" class="form-input">{{ user.bio or '' }}</textarea>
+                <small class="char-count">{{ user.bio|length if user.bio else 0 }}/500</small>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Bio</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/profile.js') }}"></script>
+{% endblock %}
