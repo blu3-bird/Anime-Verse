@@ -26,10 +26,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Save theme to database
-            fetch('/auth/update-theme', {
+            fetch('/update-theme', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()
                 },
                 body: JSON.stringify({ theme: theme })
             })
@@ -285,4 +286,11 @@ function showNotification(message, type) {
             notification.remove();
         }, 300);
     }, 3000);
+}
+
+// Get CSRF token from meta tag
+
+function getCSRFToken() {
+    const token = document.querySelector('meta[name="csrf-token"]');
+    return token ? token.getAttribute('content') : '';
 }

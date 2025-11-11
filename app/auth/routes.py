@@ -1,5 +1,5 @@
 #app/auth/routes.py
-from flask import flash , request , redirect , url_for , render_template
+from flask import flash , request , redirect , url_for , render_template , jsonify
 from flask_login import login_user , logout_user , login_required , current_user 
 from app import db
 from app.auth.forms import   LoginForm , RegistrationForm
@@ -109,3 +109,29 @@ def profile():
                            completed_anime=completed_anime,
                            avg_rating= avg_rating,
                            initials=initials)
+
+@auth.route('/update-theme', methods=['POST'])
+@login_required
+def update_theme():
+    """Update user's theme preference"""
+    
+    # Get JSON data from request
+    data = request.get_json()
+    
+    # Extract theme value
+    theme = data.get('theme')
+    
+    # Validate theme value
+    if theme not in ['dark', 'light']:
+        return jsonify({'success': False, 'error': 'Invalid theme'}), 400
+    
+    # Update user's theme preference
+    current_user.theme_preference = theme
+    
+    # Save to database
+    try:
+        db.session.commit()
+        return jsonify({'success': True, 'theme': theme}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': 'Database error'}), 500
