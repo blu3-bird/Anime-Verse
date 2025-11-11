@@ -135,3 +135,21 @@ def update_theme():
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, 'error': 'Database error'}), 500
+    
+@auth.route('/update-avatar',methods=['POST'])
+@login_required
+def update_avatar():
+    """Update user Avatar"""
+
+    data = request.get_json()
+
+    avatar = data.get('avatar')
+
+    current_user.avatar = avatar
+
+    try:
+        db.session.commit()
+        return jsonify({'success':True, 'avatar':avatar}),200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success':False, 'error': 'Database Error'}), 500

@@ -86,10 +86,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Send to server
-            fetch('/auth/update-avatar', {
+            fetch('/update-avatar', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken()
                 },
                 body: JSON.stringify({ avatar: selectedAvatar })
             })
