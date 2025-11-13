@@ -161,3 +161,19 @@ def update_avatar():
     except Exception as e:
         db.session.rollback()
         return jsonify({'success':False, 'error': 'Database Error'}), 500
+    
+@auth.route('/update-bio', methods=['POST'])
+@login_required
+def update_bio():
+    bio = request.form.get('bio')
+
+    current_user.bio = bio
+
+    try:
+        db.session.commit()
+        flash('Bio Updated successfully', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash('Unable to update to bio, try again', 'error')
+
+    return redirect(url_for('auth.profile'))

@@ -213,7 +213,8 @@
         <span class="modal-close" onclick="closeBioModal()">&times;</span>
         <h2>Edit Bio</h2>
         
-        <form method="POST" action="{{ url_for('auth.profile') }}" id="bio-form">
+        <form method="POST" action="{{ url_for('auth.update_bio') }}" id="bio-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <div class="form-group">
                 <label for="bio">Bio (max 500 characters)</label>
                 <textarea name="bio" id="bio" rows="5" maxlength="500" class="form-input">{{ user.bio or '' }}</textarea>
